@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.4.4",
+  "checkpoint_id": "8c534d213d4a",
+  "strategy": "manual-commit",
+  "branch": "master",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "content/demo-adventure/dark-woods.md",
+    "content/demo-adventure/start.md",
+    "content/demo-adventure/treasure-room.md",
+    "content/demo-adventure/village-gate.md",
+    "eslint.config.mjs",
+    "next.config.ts",
+    "package-lock.json",
+    "package.json",
+    "postcss.config.mjs",
+    "src/app/adventure/[slug]/page.tsx",
+    "src/app/globals.css",
+    "src/app/layout.tsx",
+    "src/app/page.tsx",
+    "src/components/AdventureRenderer.test.tsx",
+    "src/components/AdventureRenderer.tsx",
+    "src/components/ChoiceButton.test.tsx",
+    "src/components/ChoiceButton.tsx",
+    "src/lib/adventure/loader.test.ts",
+    "src/lib/adventure/loader.ts",
+    "src/lib/markdown/parser.test.ts",
+    "src/lib/markdown/parser.ts",
+    "src/lib/markdown/types.ts",
+    "tailwind.config.ts",
+    "tsconfig.json",
+    "vitest.config.mts",
+    "vitest.setup.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8c/534d213d4a/0/metadata.json",
+      "transcript": "/8c/534d213d4a/0/full.jsonl",
+      "context": "/8c/534d213d4a/0/context.md",
+      "content_hash": "/8c/534d213d4a/0/content_hash.txt",
+      "prompt": "/8c/534d213d4a/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 48,
+    "cache_creation_tokens": 88483,
+    "cache_read_tokens": 1726936,
+    "output_tokens": 1709,
+    "api_call_count": 44
+  }
+}

@@ -1,0 +1,154 @@
+Implement the following plan:
+
+# Plan: Initial Next.js Project Skeleton — Choose Your Own Adventure Engine
+
+## Context
+
+We have a clean repo with only a spec (`docs/base-spec.md`), license, and config files. The goal is to create the initial Next.js project skeleton for a "Choose Your Own Adventure" markdown engine — a webapp that takes markdown files and presents them as interactive, branching narratives. This plan covers the full initial setup: project config, markdown format, core parser, content loader, components, routing, sample content, and tests.
+
+## Markdown Format
+
+Adventure pages use standard markdown with YAML frontmatter and a fenced `choices` code block:
+
+```markdown
+---
+id: forest-clearing
+title: The Forest Clearing
+---
+
+# The Forest Clearing
+
+Narrative text here...
+
+\`\`\`choices
+- [Follow the stream north](dark-woods)
+- [Head toward the voices](village-gate)
+\`\`\`
+```
+
+- **Frontmatter `id`**: Page identifier and URL param. Falls back to filename (without `.md`) if omitted.
+- **Frontmatter `title`**: Display title. Falls back to first `# heading` if omitted.
+- **`choices` fenced block**: List of markdown links `[label](target-id)`. The engine intercepts these and renders them as interactive buttons. Pages with no choices block are endings.
+
+## Directory Structure
+
+```
+package.json
+tsconfig.json
+next.config.ts
+tailwind.config.ts
+postcss.config.mjs
+vitest.config.mts
+vitest.setup.ts
+src/
+  app/
+    globals.css
+    layout.tsx              # Root layout
+    page.tsx                # Home — lists adventures
+    adventure/
+      [slug]/
+        page.tsx            # Dynamic route — renders adventure page
+  lib/
+    markdown/
+      types.ts              # AdventurePage, Choice, Adventure types
+      parser.ts             # Markdown → AdventurePage parser
+      parser.test.ts
+    adventure/
+      loader.ts             # Reads .md files from content dir
+      loader.test.ts
+  components/
+    ChoiceButton.tsx         # Client component — interactive choice
+    ChoiceButton.test.tsx
+    AdventureRenderer.tsx    # Renders page content + choices
+    AdventureRenderer.test.tsx
+content/
+  demo-adventure/
+    start.md
+    dark-woods.md
+    village-gate.md
+    treasure-room.md
+```
+
+## Dependencies
+
+**Production:** next, react, react-dom, unified, remark-parse, remark-frontmatter, remark-rehype, rehype-stringify, rehype-raw, gray-matter, tailwindcss, @tailwindcss/typography
+
+**Dev:** typescript, vitest, @vitejs/plugin-react, @testing-library/react, @testing-library/dom, jsdom, vite-tsconfig-paths, @types/react, @types/node, eslint, eslint-config-next
+
+## Routing
+
+- **URL scheme**: `/adventure/[slug]?page=[pageId]`
+- `/` — Home page listing available adventures
+- `/adventure/demo-adventure` — Start page (defaults to `start`)
+- `/adventure/demo-adventure?page=dark-woods` — Specific page
+- `ChoiceButton` uses Next.js `<Link>` for client-side navigation
+
+## Key Implementation Details
+
+### `src/lib/markdown/types.ts`
+- `Choice { label: string; targetId: string }`
+- `AdventurePage { id, title, contentHtml, choices, rawMarkdown }`
+- `Adventure { slug, title, pages: Map<string, AdventurePage>, startPageId }`
+
+### `src/lib/markdown/parser.ts`
+1. Extract frontmatter with `gray-matter`
+2. Parse body with `unified` + `remark-parse`
+3. Walk AST to find fenced blocks with `lang === 'choices'`
+4. Parse choices via regex `/\[(.+?)\]\((.+?)\)/g`
+5. Remove choice nodes from AST
+6. Convert remaining AST to HTML via `remark-rehype` + `rehype-stringify`
+7. Return `AdventurePage`
+
+### `src/lib/adventure/loader.ts`
+- `loadAdventure(dirPath)` — reads all `.md` files, parses each, builds page map, identifies start page
+- `listAdventures(contentDir)` — lists adventure directories for the home page
+
+### `src/components/ChoiceButton.tsx`
+- Client component (`'use client'`)
+- Renders as `<Link href={/adventure/${slug}?page=${targetId}}>` with button styling
+
+### `src/components/AdventureRenderer.tsx`
+- Renders `contentHtml` in a `prose` div
+- Maps `choices` to `<ChoiceButton>` components
+- Handles ending pages (no choices) gracefully
+
+### `src/app/adventure/[slug]/page.tsx`
+- Server component that loads adventure, looks up page from searchParams, renders `AdventureRenderer`
+- Exports `generateStaticParams` for all adventure slugs
+
+## Implementation Order
+
+1. Config files (`package.json`, `tsconfig.json`, `next.config.ts`, `tailwind.config.ts`, `postcss.config.mjs`, `vitest.config.mts`, `vitest.setup.ts`) → `npm install`
+2. `src/lib/markdown/types.ts`
+3. `src/lib/markdown/parser.ts` + `parser.test.ts` → run tests
+4. `src/lib/adventure/loader.ts` + `loader.test.ts` → run tests
+5. `content/demo-adventure/*.md` (4 sample pages)
+6. `src/components/ChoiceButton.tsx` + test
+7. `src/components/AdventureRenderer.tsx` + test
+8. `src/app/globals.css`, `layout.tsx`, `page.tsx`
+9. `src/app/adventure/[slug]/page.tsx`
+
+## Verification
+
+1. `npm install` — succeeds
+2. `npm run dev` — dev server starts on localhost:3000
+3. Visit `/` — home page lists "demo-adventure"
+4. Click adventure → renders start page with narrative + choice buttons
+5. Click choices → navigates between pages correctly
+6. Reach ending page → renders without choices
+7. `npm run test:run` — all unit tests pass
+8. `npm run build` — production build succeeds
+9. `npm run lint` — no errors
+
+
+If you need specific details from before exiting plan mode (like exact code snippets, error messages, or content you generated), read the full transcript at: /Users/joseph/.REDACTED.jsonl
+
+---
+
+<task-notification>
+<task-id>bff87ea</task-id>
+<output-file>/private/tmp/claude-501/-Users-joseph-src-random-entire-test/tasks/bff87ea.output</output-file>
+<status>completed</status>
+<summary>Background command "Start dev server, verify it responds, then stop" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: /private/tmp/claude-501/-Users-joseph-src-random-entire-test/tasks/bff87ea.output
